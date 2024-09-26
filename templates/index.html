@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monetize Chatbots</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Monetize Chatbots - Generate Your Custom API</h1>
+        <form id="custIdForm">
+            <label for="cust_id">Enter your Customer ID (cust_id):</label><br>
+            <input type="text" id="cust_id" name="cust_id" required><br><br>
+            <button type="submit">Go</button>
+        </form>
+
+        <div id="results" style="display: none;">
+            <h2>Your Custom API Details</h2>
+            <p><strong>API Endpoint URL:</strong> <span id="apiEndpoint"></span> <button onclick="copyText('apiEndpoint')">Copy</button></p>
+            <p><strong>OpenAPI Specification:</strong> <button onclick="copyText('openApiSpec')">Copy</button></p>
+            <pre id="openApiSpec"></pre>
+            <p><strong>Integration Instructions:</strong> <button onclick="copyText('integrationInstructions')">Copy</button></p>
+            <pre id="integrationInstructions"></pre>
+        </div>
+
+        <footer>
+            <p>
+                <a href="https://sites.google.com/sentigral.com/monetizechatbots/privacy-policy">Privacy Policy</a> |
+                <a href="https://sites.google.com/sentigral.com/monetizechatbots/terms-of-service">Terms of Service</a>
+            </p>
+        </footer>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
