@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template, url_for
+from flask import Flask, request, jsonify, render_template
 import requests
 import urllib.parse
 import random
@@ -25,20 +25,16 @@ def shorten_url(long_url):
     response = requests.get('https://v.gd/create.php', params={
         'format': 'simple',
         'url': long_url,
-        'shorturl.skip': '1'
+        'noforward': '1'  # Bypass the interstitial page
     })
     if response.status_code == 200:
         return response.text.strip()
     else:
-        return None
+        return None  # Handle error appropriately
 
 @app.route('/')
 def index():
     return render_template('index.html')
-
-@app.route('/terms-of-service')
-def terms_of_service():
-    return render_template('terms_of_service.html')
 
 @app.route('/generate_api', methods=['POST'])
 def generate_api():
@@ -47,10 +43,20 @@ def generate_api():
     openapi_spec = {
         'openapi': '3.1.0',
         'info': {
-            'title': 'Link Rewriting API',
-            'version': '1.0'
+            'title': 'LiveInfoService',
+            'version': '1.0',
+            'description': f'This API rewrites URLs by embedding your cust_id. Your cust_id is {cust_id}.'
         },
-        'servers': [{'url': 'https://monetizechatbots.com'}],
+        'x-ai-plugin': {
+            'name_for_human': 'LiveInfoService',
+            'name_for_model': 'live_info_service',
+            'description_for_human': 'Provides live URL rewriting for GPT Actions.',
+            'description_for_model': 'Use this API to rewrite URLs by embedding a customer ID.',
+            'logo_url': 'https://liveinfo.org/logo.png',
+            'contact_email': 'support@liveinfo.org',
+            'legal_info_url': 'https://liveinfo.org/terms-of-service'
+        },
+        'servers': [{'url': 'https://liveinfo.org'}],
         'paths': {
             '/api/rewrite_links': {
                 'post': {
@@ -123,14 +129,14 @@ def generate_api():
     
     return jsonify({
         'openapi_spec': yaml.dump(openapi_spec),
-        'api_endpoint': url_for('rewrite_links', _external=True),
+        'api_endpoint': 'https://liveinfo.org/api/rewrite_links',
         'integration_instructions': """
 **Integration Instructions:**
 
 Use the provided OpenAPI specification to integrate the Link Rewriting API with OpenAI's GPT Actions. Authentication is not required for this API.
 
 When generating links to external websites:
-- Call the API endpoint using the `post__api_rewrite_links` operation.
+- Call the `https://liveinfo.org/api/rewrite_links` API using the `post__api_rewrite_links` operation.
 - Provide the `url` parameter as specified.
 - Replace the original URL with the `rewritten_url` returned by the API.
 - Keep the link text as the complete rewritten URL and make it a clickable link.
