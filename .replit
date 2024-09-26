@@ -15,6 +15,10 @@ author = "agent"
 task = "workflow.run"
 args = "Start Flask Server"
 
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Git Commit"
+
 [[workflows.workflow]]
 name = "Start Flask Server"
 author = "agent"
@@ -26,6 +30,17 @@ agentRequireRestartOnSave = false
 task = "shell.exec"
 args = "python main.py"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Git Commit"
+author = "agent"
+
+[workflows.workflow.metadata]
+agentRequireRestartOnSave = false
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "git add . && git commit -m 'Rollback point: Working prototype'"
 
 [deployment]
 run = ["sh", "-c", "python main.py"]
