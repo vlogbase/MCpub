@@ -36,6 +36,10 @@ def shorten_url(long_url):
 def index():
     return render_template('index.html')
 
+@app.route('/privacy-policy')
+def privacy_policy():
+    return render_template('privacy_policy.html')
+
 @app.route('/generate_api', methods=['POST'])
 def generate_api():
     cust_id = request.json['cust_id']
