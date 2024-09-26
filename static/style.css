@@ -72,8 +72,42 @@ footer a:hover {
 
 header {
     padding: 10px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
 .logo {
     width: 50px;
     height: auto;
+}
+
+/* New styles for privacy policy and terms of service pages */
+.policy-content {
+    background: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    margin-top: 20px;
+}
+
+.policy-content h2 {
+    color: #444;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.policy-content p, .policy-content ul {
+    margin-bottom: 15px;
+}
+
+.policy-content ul {
+    padding-left: 20px;
+}
+
+.policy-content a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.policy-content a:hover {
+    text-decoration: underline;
 }

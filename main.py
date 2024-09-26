@@ -60,7 +60,7 @@ def generate_api():
             'name_for_model': 'live_info_service',
             'description_for_human': 'Provides live URL rewriting for GPT Actions.',
             'description_for_model': 'Use this API to rewrite URLs by embedding a customer ID.',
-            'logo_url': '/static/Sentigral logo 426 square aplha.png',
+            'logo_url': '/static/MonetiseChatbots logo 426 square aplha.png',
             'contact_email': 'support@liveinfo.org',
             'legal_info_url': 'https://liveinfo.org/terms-of-service'
         },
