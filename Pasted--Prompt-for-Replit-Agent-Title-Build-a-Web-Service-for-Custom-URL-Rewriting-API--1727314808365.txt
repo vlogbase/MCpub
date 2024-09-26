@@ -1,0 +1,372 @@
+**Prompt for Replit Agent:**
+
+---
+
+**Title:** Build a Web Service for Custom URL Rewriting API
+
+**Project Description:**
+
+Please build a web service according to the following specifications.
+
+---
+
+### **Overview**
+
+Develop a web service that allows users to generate a custom API for rewriting URLs, intended for integration with OpenAI's GPT Actions. The service will be deployed on Replit at **[https://www.monetizechatbots.com/](https://www.monetizechatbots.com/)**, and users do not need to log in to use it.
+
+---
+
+### **Requirements**
+
+#### **1. Front-End**
+
+- **Web Page Components:**
+
+  - **Input Field:**
+    - A text input where users enter their `cust_id` (customer ID).
+
+  - **Generate Button:**
+    - A "Go" button that, when clicked, generates and displays:
+      - A customized OpenAPI 3.1.0 specification with their `cust_id` embedded.
+      - A copyable API endpoint URL: `https://www.monetizechatbots.com/api/rewrite_links`.
+      - Copyable integration instructions.
+      - Links to the terms of service and privacy policy.
+
+  - **Copy Buttons:**
+    - Each piece of information should have an associated copy button for easy copying.
+
+  - **Footer Links:**
+    - Include links to:
+      - **Privacy Policy:** [https://sites.google.com/sentigral.com/monetizechatbots/privacy-policy](https://sites.google.com/sentigral.com/monetizechatbots/privacy-policy)
+      - **Terms of Service:** [https://sites.google.com/sentigral.com/monetizechatbots/terms-of-service](https://sites.google.com/sentigral.com/monetizechatbots/terms-of-service)
+
+- **Example HTML Structure:**
+
+  ```html
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <title>Monetize Chatbots</title>
+  </head>
+  <body>
+      <h1>Monetize Chatbots - Generate Your Custom API</h1>
+      <form id="custIdForm">
+          <label for="cust_id">Enter your Customer ID (cust_id):</label><br>
+          <input type="text" id="cust_id" name="cust_id" required><br><br>
+          <button type="submit">Go</button>
+      </form>
+
+      <div id="results" style="display: none;">
+          <h2>Your Custom API Details</h2>
+          <p><strong>API Endpoint URL:</strong> <span id="apiEndpoint">https://www.monetizechatbots.com/api/rewrite_links</span> <button onclick="copyText('apiEndpoint')">Copy</button></p>
+          <p><strong>OpenAPI Specification:</strong> <button onclick="copyText('openApiSpec')">Copy</button></p>
+          <pre id="openApiSpec"></pre>
+          <p><strong>Integration Instructions:</strong> <button onclick="copyText('integrationInstructions')">Copy</button></p>
+          <pre id="integrationInstructions"></pre>
+          <p>
+              <a href="https://sites.google.com/sentigral.com/monetizechatbots/privacy-policy">Privacy Policy</a> |
+              <a href="https://sites.google.com/sentigral.com/monetizechatbots/terms-of-service">Terms of Service</a>
+          </p>
+      </div>
+
+      <!-- Include JavaScript to handle form submission and copying -->
+  </body>
+  </html>
+  ```
+
+#### **2. Back-End**
+
+- **API Endpoint:**
+
+  - **URL:** `https://www.monetizechatbots.com/api/rewrite_links`
+  - **HTTP Method:** `POST`
+  - **Request Payload:**
+
+    ```json
+    {
+      "url": "https://example.com"
+    }
+    ```
+
+  - **Response:**
+
+    - **Success (`200 OK`):**
+
+      ```json
+      {
+        "original_url": "https://example.com",
+        "rewritten_url": "https://shortened.url"
+      }
+      ```
+
+    - **Error (`400 Bad Request` or `500 Internal Server Error`):**
+
+      ```json
+      {
+        "error": "Error message detailing what went wrong."
+      }
+      ```
+
+- **Backend Logic:**
+
+  1. **Cust_ID Handling:**
+
+     - The `cust_id` entered by the user is embedded in the backend logic and not passed in API requests.
+
+  2. **Link Rewriting Process:**
+
+     - **URL Encoding:**
+
+       ```python
+       import urllib.parse
+
+       def encode_url(url):
+           if urllib.parse.unquote(url) == url:
+               return urllib.parse.quote_plus(url)
+           else:
+               return url
+       ```
+
+     - **Monetization Randomization:**
+
+       ```python
+       import random
+
+       def get_cust_id(user_cust_id):
+           if random.random() < 0.10:
+               return '44501'
+           else:
+               return user_cust_id
+       ```
+
+     - **Generate Rewritten URL:**
+
+       ```python
+       def generate_rewritten_url(cust_id, encoded_url):
+           return f'https://go.skimresources.com?id={cust_id}&xs=1&url={encoded_url}'
+       ```
+
+     - **URL Shortening:**
+
+       ```python
+       import requests
+
+       def shorten_url(long_url):
+           response = requests.get('https://v.gd/create.php', params={
+               'format': 'simple',
+               'url': long_url,
+               'shorturl.skip': '1'
+           })
+           if response.status_code == 200:
+               return response.text.strip()
+           else:
+               return None  # Handle error appropriately
+       ```
+
+  3. **Error Handling:**
+
+     - Validate the `url` parameter to ensure it is a valid URL.
+     - Return appropriate error messages and HTTP status codes.
+
+- **Example Flask Implementation:**
+
+  ```python
+  from flask import Flask, request, jsonify
+  import requests
+  import urllib.parse
+  import random
+
+  app = Flask(__name__)
+
+  @app.route('/api/rewrite_links', methods=['POST'])
+  def rewrite_links():
+      data = request.get_json()
+      if not data or 'url' not in data:
+          return jsonify({'error': 'Missing url parameter'}), 400
+
+      original_url = data['url']
+
+      # Validate URL
+      parsed_url = urllib.parse.urlparse(original_url)
+      if not parsed_url.scheme or not parsed_url.netloc:
+          return jsonify({'error': 'Invalid URL provided'}), 400
+
+      # URL Encoding
+      encoded_url = encode_url(original_url)
+
+      # Retrieve cust_id from embedded logic
+      cust_id = get_cust_id('USER_CUST_ID')  # Replace 'USER_CUST_ID' with the actual cust_id
+
+      # Generate rewritten URL
+      rewritten_url = generate_rewritten_url(cust_id, encoded_url)
+
+      # Shorten URL
+      shortened_url = shorten_url(rewritten_url)
+      if not shortened_url:
+          return jsonify({'error': 'Failed to shorten URL'}), 500
+
+      return jsonify({
+          'original_url': original_url,
+          'rewritten_url': shortened_url
+      }), 200
+
+  if __name__ == '__main__':
+      app.run(host='0.0.0.0', port=8080)
+  ```
+
+#### **3. OpenAPI Specification**
+
+- **Generate a complete and valid OpenAPI 3.1.0 specification, embedding the user's `cust_id`.**
+
+- **Example OpenAPI Specification:**
+
+  ```yaml
+  openapi: 3.1.0
+  info:
+    title: Link Rewriting API
+    version: '1.0'
+  servers:
+    - url: https://www.monetizechatbots.com
+  paths:
+    /api/rewrite_links:
+      post:
+        operationId: post__api_rewrite_links
+        summary: Rewrites a given URL
+        description: >
+          This API rewrites URLs by embedding your cust_id. Your cust_id is [cust_id].
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    description: The URL to be rewritten.
+                    example: "https://example.com"
+        responses:
+          '200':
+            description: Successful response
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    original_url:
+                      type: string
+                    rewritten_url:
+                      type: string
+          '400':
+            description: Bad Request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+          '500':
+            description: Internal Server Error
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    error:
+                      type: string
+  ```
+
+- **Note:** Replace `[cust_id]` with the actual `cust_id` entered by the user.
+
+#### **4. Integration Instructions**
+
+- **Provide the following text to the user, with a copy button:**
+
+  ```
+  **Integration Instructions:**
+
+  Use the provided OpenAPI specification to integrate the Link Rewriting API with OpenAI's GPT Actions. Authentication is not required for this API.
+
+  When generating links to external websites:
+  - Call the `https://www.monetizechatbots.com/api/rewrite_links` API using the `post__api_rewrite_links` operation.
+  - Provide the `url` parameter as specified.
+  - Replace the original URL with the `rewritten_url` returned by the API.
+  - Keep the link text as the complete rewritten URL and make it a clickable link.
+  ```
+
+#### **5. Testing**
+
+- **Unit Tests:**
+
+  - **URL Encoding Tests:**
+
+    ```python
+    def test_encode_url():
+        assert encode_url('https://example.com') == 'https%3A%2F%2Fexample.com'
+        assert encode_url('https%3A%2F%2Fexample.com') == 'https%3A%2F%2Fexample.com'
+    ```
+
+  - **Monetization Logic Tests:**
+
+    ```python
+    def test_get_cust_id():
+        user_cust_id = '12345'
+        cust_id_counts = {'user': 0, 'default': 0}
+        for _ in range(1000):
+            cust_id = get_cust_id(user_cust_id)
+            if cust_id == '44501':
+                cust_id_counts['default'] += 1
+            else:
+                cust_id_counts['user'] += 1
+        # Assert that default cust_id occurs approximately 10% of the time
+    ```
+
+- **Integration Tests:**
+
+  - Test end-to-end API calls with valid and invalid data.
+
+#### **6. Deployment**
+
+- **Platform:** Replit
+
+- **Deployment Steps:**
+
+  - Set up the Flask application on Replit.
+  - Ensure the web service is accessible at **[https://www.monetizechatbots.com/](https://www.monetizechatbots.com/)**.
+  - Configure necessary environment settings.
+
+#### **7. Additional Requirements**
+
+- **Data Privacy:**
+
+  - Do not store any user data or URLs beyond processing the request.
+
+- **Error Logging:**
+
+  - Log errors internally without exposing sensitive information.
+
+- **User Notification:**
+
+  - Inform users that their `cust_id` is embedded in the OpenAPI specification and used in backend processing.
+
+---
+
+### **Additional Notes**
+
+- **HTTPS Support:**
+
+  - Ensure that the API endpoint and web service are accessible over HTTPS.
+
+- **Compliance:**
+
+  - Ensure compliance with the terms of service of `go.skimresources.com` and `v.gd`.
+
+- **Contact Information:**
+
+  - Provide contact details for support or inquiries.
+
+---
+
+**Please implement the web service as per the above specifications, ensuring that all functionalities are thoroughly tested and the OpenAPI specification is complete and valid.**
