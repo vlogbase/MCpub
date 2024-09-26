@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, url_for
 import requests
 import urllib.parse
 import random
@@ -35,6 +35,10 @@ def shorten_url(long_url):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/terms-of-service')
+def terms_of_service():
+    return render_template('terms_of_service.html')
 
 @app.route('/generate_api', methods=['POST'])
 def generate_api():
@@ -119,14 +123,14 @@ def generate_api():
     
     return jsonify({
         'openapi_spec': yaml.dump(openapi_spec),
-        'api_endpoint': 'https://monetizechatbots.com/api/rewrite_links',
+        'api_endpoint': url_for('rewrite_links', _external=True),
         'integration_instructions': """
 **Integration Instructions:**
 
 Use the provided OpenAPI specification to integrate the Link Rewriting API with OpenAI's GPT Actions. Authentication is not required for this API.
 
 When generating links to external websites:
-- Call the `https://monetizechatbots.com/api/rewrite_links` API using the `post__api_rewrite_links` operation.
+- Call the API endpoint using the `post__api_rewrite_links` operation.
 - Provide the `url` parameter as specified.
 - Replace the original URL with the `rewritten_url` returned by the API.
 - Keep the link text as the complete rewritten URL and make it a clickable link.
