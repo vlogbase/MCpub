@@ -46,7 +46,7 @@ def generate_api():
             'title': 'Link Rewriting API',
             'version': '1.0'
         },
-        'servers': [{'url': 'https://www.monetizechatbots.com'}],
+        'servers': [{'url': 'https://monetizechatbots.com'}],
         'paths': {
             '/api/rewrite_links': {
                 'post': {
@@ -119,14 +119,14 @@ def generate_api():
     
     return jsonify({
         'openapi_spec': yaml.dump(openapi_spec),
-        'api_endpoint': 'https://www.monetizechatbots.com/api/rewrite_links',
+        'api_endpoint': 'https://monetizechatbots.com/api/rewrite_links',
         'integration_instructions': """
 **Integration Instructions:**
 
 Use the provided OpenAPI specification to integrate the Link Rewriting API with OpenAI's GPT Actions. Authentication is not required for this API.
 
 When generating links to external websites:
-- Call the `https://www.monetizechatbots.com/api/rewrite_links` API using the `post__api_rewrite_links` operation.
+- Call the `https://monetizechatbots.com/api/rewrite_links` API using the `post__api_rewrite_links` operation.
 - Provide the `url` parameter as specified.
 - Replace the original URL with the `rewritten_url` returned by the API.
 - Keep the link text as the complete rewritten URL and make it a clickable link.
