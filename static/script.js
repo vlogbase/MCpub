@@ -15,7 +15,9 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            document.getElementById('apiEndpoint').textContent = data.api_endpoint;
+            // Removed the line that updates 'apiEndpoint' since it's no longer in the HTML
+            // document.getElementById('apiEndpoint').textContent = data.api_endpoint;
+
             document.getElementById('openApiSpec').textContent = data.openapi_spec;
             document.getElementById('integrationInstructions').textContent = data.integration_instructions;
             results.style.display = 'block';

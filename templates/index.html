@@ -9,7 +9,7 @@
 </head>
 <body>
     <header>
-        <a href="https://monetizechatbots.com/">
+        <a href="https://monetizechatbots.com">
             <img src="{{ url_for('static', filename='images/MonetiseChatbots_logo_alpha.png') }}" alt="MonetiseChatbots Logo" class="logo">
         </a>
     </header>
@@ -23,10 +23,9 @@
 
         <div id="results" style="display: none;">
             <h2>Your Custom API Details</h2>
-            <p><strong>API Endpoint URL:</strong> <span id="apiEndpoint"></span> <button onclick="copyText('apiEndpoint')">Copy</button></p>
             <p><strong>OpenAPI Specification:</strong> <button onclick="copyText('openApiSpec')">Copy</button></p>
             <pre id="openApiSpec"></pre>
-            <p><strong>Integration Instructions:</strong> <button onclick="copyText('integrationInstructions')">Copy</button></p>
+            <p><strong>Add this to the top of your GPT prompt:</strong> <button onclick="copyText('integrationInstructions')">Copy</button></p>
             <pre id="integrationInstructions"></pre>
         </div>
 
