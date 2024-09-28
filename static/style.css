@@ -72,8 +72,8 @@ footer a:hover {
 
 header {
     padding: 10px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: #f4f4f4;
+    box-shadow: none;
 }
 
 .logo {
