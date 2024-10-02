@@ -25,12 +25,12 @@ def shorten_url(long_url):
     response = requests.get('https://v.gd/create.php', params={
         'format': 'simple',
         'url': long_url,
-        'noforward': '1'  # Bypass the interstitial page
+        'noforward': '1'
     })
     if response.status_code == 200:
         return response.text.strip()
     else:
-        return None  # Handle error appropriately
+        return None
 
 @app.route('/')
 def index():
@@ -173,21 +173,16 @@ def rewrite_links():
 
     original_url = data['url']
 
-    # Validate URL
     parsed_url = urllib.parse.urlparse(original_url)
     if not parsed_url.scheme or not parsed_url.netloc:
         return jsonify({'error': 'Invalid URL provided'}), 400
 
-    # URL Encoding
     encoded_url = encode_url(original_url)
 
-    # Retrieve cust_id from embedded logic
-    cust_id = get_cust_id('USER_CUST_ID')  # Replace 'USER_CUST_ID' with the actual cust_id
+    cust_id = get_cust_id('USER_CUST_ID')
 
-    # Generate rewritten URL
     rewritten_url = generate_rewritten_url(cust_id, encoded_url)
 
-    # Shorten URL
     shortened_url = shorten_url(rewritten_url)
     if not shortened_url:
         return jsonify({'error': 'Failed to shorten URL'}), 500
