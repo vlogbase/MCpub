@@ -14,10 +14,10 @@ worker_class = "sync"
 timeout = 60
 
 # Enable access logging
-accesslog = "-"
+accesslog = "/tmp/gunicorn_access.log"
 
 # Enable error logging
-errorlog = "-"
+errorlog = "/tmp/gunicorn_error.log"
 
 # Set log level
-loglevel = "info"
+loglevel = "debug"
