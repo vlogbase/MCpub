@@ -1,2 +1,0 @@
-Completed 100 requests in 0.00 seconds
-Requests per second: 256375.55

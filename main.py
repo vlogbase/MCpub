@@ -1,12 +1,10 @@
 import os
 from flask import Flask, request, jsonify, render_template
-from flask_caching import Cache
 import requests
 import urllib.parse
 import random
 
 app = Flask(__name__)
-cache = Cache(app, config={'CACHE_TYPE': 'simple'})
 
 def encode_url(url):
     if urllib.parse.unquote(url) == url:
@@ -23,7 +21,6 @@ def get_cust_id(user_cust_id):
 def generate_rewritten_url(cust_id, encoded_url):
     return f'https://go.skimresources.com?id={cust_id}&xs=1&url={encoded_url}'
 
-@cache.memoize(timeout=300)  # Cache for 5 minutes
 def shorten_url(long_url):
     response = requests.get('https://v.gd/create.php', params={
         'format': 'simple',
@@ -40,7 +37,6 @@ def index():
     return render_template('index.html')
 
 @app.route('/generate_api', methods=['POST'])
-@cache.memoize(timeout=3600)  # Cache for 1 hour
 def generate_api():
     data = request.get_json()
     cust_id = data.get('cust_id', '')
@@ -50,7 +46,7 @@ info:
   title: Link Rewriting API
   version: '1.0'
 servers:
-  - url: https://www.liveinfo.org
+  - url: https://www.monetizechatbots.com
 paths:
   /api/rewrite_links:
     post:
@@ -100,23 +96,15 @@ paths:
                   error:
                     type: string"""
 
-    integration_instructions = """Whenever you mention a product or service that can be purchased, try to find a link to it. In all your responses, whenever you mention any website, service, or content that can be linked:
+    integration_instructions = """**Integration Instructions:**
 
-1. Mention the names in your main response **without including URLs inline**.
+Use the provided OpenAPI specification to integrate the Link Rewriting API with OpenAI's GPT Actions. Authentication is not required for this API.
 
-2. **After completing your main response**, collect all the URLs corresponding to the services or websites you mentioned.
-
-3. For each URL, **call the `post__api_rewrite_links` operation** at `https://www.liveinfo.org/api/rewrite_links`. Provide the `url` parameter as specified. Replace the original URL with the `rewritten_url` returned by the API.
-
-
-4. At the end of your response, under a heading like "**Useful Links**," present each rewritten URL as a **clickable link** using the **name of the target** as the link text.
-
-Do **not** include any debug messages or mention any link modification process; present the links naturally.
-
-_______________________
-Main Prompt:
-
-"""
+When generating links to external websites:
+- Call the `https://www.monetizechatbots.com/api/rewrite_links` API using the `post__api_rewrite_links` operation.
+- Provide the `url` parameter as specified.
+- Replace the original URL with the `rewritten_url` returned by the API.
+- Keep the link text as the complete rewritten URL and make it a clickable link."""
 
     return jsonify({
         'openapi_spec': openapi_spec,
