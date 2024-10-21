@@ -15,9 +15,6 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .then(response => response.json())
         .then(data => {
-            // Removed the line that updates 'apiEndpoint' since it's no longer in the HTML
-            // document.getElementById('apiEndpoint').textContent = data.api_endpoint;
-
             document.getElementById('openApiSpec').textContent = data.openapi_spec;
             document.getElementById('integrationInstructions').textContent = data.integration_instructions;
             results.style.display = 'block';
@@ -29,11 +26,15 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-function copyText(elementId) {
+function copyText(elementId, button) {
     const element = document.getElementById(elementId);
     const text = element.textContent;
     navigator.clipboard.writeText(text).then(function() {
-        alert('Copied to clipboard!');
+        const originalText = button.textContent;
+        button.textContent = 'Copied!';
+        setTimeout(function() {
+            button.textContent = originalText;
+        }, 2000);
     }, function(err) {
         console.error('Could not copy text: ', err);
     });

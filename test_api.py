@@ -1,8 +1,11 @@
 import requests
 
-url = 'https://monetizechatbots.replit.app/api/rewrite_links'  # Replace with your actual Replit URL
+url = 'https://liveinfo.org/api/rewrite_links'  # Use the actual URL
 headers = {'Content-Type': 'application/json'}
-data = {'url': 'https://example.com'}
+data = {
+    'url': 'https://example.com',
+    'cust_id': '44501'  # Replace with a valid customer ID
+}
 
 response = requests.post(url, json=data, headers=headers)
 

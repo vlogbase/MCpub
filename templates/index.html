@@ -2,16 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Monetize Chatbots</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/MonetiseChatbots_logo_alpha.png') }}">
+    <!-- Canonical Tag -->
+    <link rel="canonical" href="https://monetizechatbots.com/">
+    <style>
+        .top-links {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            text-align: right;
+        }
+        .top-links a {
+            margin-left: 15px;
+            color: #000;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .top-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <header>
         <a href="https://monetizechatbots.com">
-            <img src="{{ url_for('static', filename='images/MonetiseChatbots_logo_alpha.png') }}" alt="MonetiseChatbots Logo" class="logo">
+            <img src="{{ url_for('static', filename='images/MonetiseChatbots_logo_alpha.png') }}" alt="MonetizeChatbots Logo" class="logo">
         </a>
+        <div class="top-links">
+            <a href="https://youtu.be/dpbqDUmZW_E" target="_blank">Video: Youtube</a>
+            <a href="https://x.com/MonetizeChatbot" target="_blank">Support, via Twitter</a>
+            <a href="https://linktr.ee/MonetizeChatbots" target="_blank">More links</a>
+        </div>
     </header>
     <div class="container">
         <h1>
@@ -21,11 +44,11 @@
 
         <style>
           h1 {
-            font-size: 36px; /* Adjust size for the first line */
+            font-size: 36px;
           }
 
           .small-text {
-            font-size: 20px; /* Adjust size for the second line */
+            font-size: 20px;
           }
         </style>
 
@@ -37,18 +60,24 @@
 
         <div id="results" style="display: none;">
             <h2>Your Custom API Details</h2>
-            <p><strong>OpenAPI Specification:</strong> <button onclick="copyText('openApiSpec')">Copy</button></p>
+            <p><strong>OpenAPI Specification:</strong> <button onclick="copyText('openApiSpec', this)">Copy</button></p>
             <pre id="openApiSpec"></pre>
             <!-- New Privacy Policy Section -->
-            <p><strong>Privacy Policy:</strong> <button onclick="copyText('privacyPolicyUrl')">Copy</button></p>
+            <p><strong>Privacy Policy:</strong> <button onclick="copyText('privacyPolicyUrl', this)">Copy</button></p>
             <pre id="privacyPolicyUrl">https://liveinfo.org/pp</pre>
-            <p><strong>Add this to the top of your GPT prompt:</strong> <button onclick="copyText('integrationInstructions')">Copy</button></p>
+            <p><strong>Add this to the top of your GPT prompt:</strong> <button onclick="copyText('integrationInstructions', this)">Copy</button></p>
             <pre id="integrationInstructions"></pre>
 
-            <!-- New Authentication Section -->
-            <p><strong>Authentication:</strong> None Needed</p>
-        </div>
+            <!-- Updated Authentication Section -->
+            <p><strong>Authentication:</strong> None needed.</p>
+            </div>
 
+        <!-- Product Hunt Review Button -->
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="https://www.producthunt.com/posts/monetize-chatbots?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-monetize&#0045;chatbots" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=497947&theme=light" alt="Monetize&#0032;Chatbots - Turn&#0032;outbound&#0032;links&#0032;into&#0032;Affiliate&#0032;links | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" />
+            </a>
+        </div>
+        
         <footer>
             <p>
                 <a href="{{ url_for('privacy_policy') }}">Privacy Policy</a> |

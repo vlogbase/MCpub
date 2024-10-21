@@ -1,6 +1,8 @@
-{pkgs}: {
-  deps = [
-    pkgs.libyaml
-    pkgs.postgresql
+{ pkgs }:
+
+pkgs.mkShell {
+  buildInputs = [
+    pkgs.python311Full
+    pkgs.poetry
   ];
 }
