@@ -1,17 +1,17 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('custIdForm');
+    const form = document.getElementById('SkimpubIDForm');
     const results = document.getElementById('results');
 
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        const custId = document.getElementById('cust_id').value;
+        const SkimpubID = document.getElementById('SkimpubID').value;
 
         fetch('/generate_api', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ cust_id: custId }),
+            body: JSON.stringify({ SkimpubID: SkimpubID }),
         })
         .then(response => response.json())
         .then(data => {

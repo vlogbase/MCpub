@@ -20,14 +20,14 @@ def encode_url(url):
     else:
         return url
 
-def get_cust_id(user_cust_id):
+def get_SkimpubID(user_SkimpubID):
     if random.random() < 0.10:
-        return '44501'  # Your cust_id for monetization
+        return '44501'  # Your Skimlinks Publisher ID for monetization
     else:
-        return user_cust_id
+        return user_SkimpubID
 
-def generate_rewritten_url(cust_id, encoded_url):
-    return f'https://go.skimresources.com?id={cust_id}&xs=1&url={encoded_url}'
+def generate_rewritten_url(SkimpubID, encoded_url):
+    return f'https://go.skimresources.com?id={SkimpubID}&xs=1&url={encoded_url}'
 
 def shorten_url(long_url):
     try:
@@ -51,18 +51,18 @@ def index():
 @app.route('/generate_api', methods=['POST'])
 def generate_api():
     data = request.get_json()
-    cust_id = data.get('cust_id', '')
+    SkimpubID = data.get('SkimpubID', '')
 
     openapi_spec = f"""openapi: 3.1.0
 info:
   title: Link Rewriting API
   version: '1.0'
 servers:
-  - url: https://liveinfo.org
+  - url: https://liveinfo.org/api/{SkimpubID}
 paths:
-  /api/rewrite_links:
+  /rewrite_links:
     post:
-      operationId: post__api_rewrite_links
+      operationId: post__rewrite_links
       summary: Rewrites given URLs
       requestBody:
         required: true
@@ -71,22 +71,13 @@ paths:
             schema:
               type: object
               required:
-                - cust_id
                 - urls
               properties:
-                cust_id:
-                  type: string
-                  description: Your Skimlinks Publisher ID.
-                  example: "{cust_id}"
                 urls:
                   type: array
                   items:
                     type: string
-                  description: List of URLs to be rewritten.
-              example:
-                cust_id: "{cust_id}"
-                urls:
-                  - "https://example.com"
+                  description: "List of URLs to be rewritten."
       responses:
         '200':
           description: Successful response
@@ -125,13 +116,13 @@ components:
   schemas: {{}}
 """
 
-    integration_instructions = """Whenever you mention products or services that can be linked, follow these steps:
+    integration_instructions = f"""Whenever you mention products or services that can be linked, follow these steps:
 
 1. Mention the names in your main response **without including URLs inline**.
 
 2. **After completing your main response**, collect all the URLs corresponding to the services or websites you mentioned.
 
-3. Collect these URLs into a list and **call the `post__api_rewrite_links` operation** at `https://liveinfo.org/api/rewrite_links`. The API accepts a JSON object with your `cust_id` and a `urls` array.
+3. Collect these URLs into a list and **call the `post__rewrite_links` operation** at `https://liveinfo.org/api/{SkimpubID}/rewrite_links`. The API accepts a JSON object with a `urls` array.
 
 4. Replace the original URLs with the `rewritten_urls` returned by the API.
 
@@ -149,20 +140,19 @@ Main Prompt:
         'integration_instructions': integration_instructions
     })
 
-@app.route('/api/rewrite_links', methods=['POST'])
-def rewrite_links():
+@app.route('/api/<SkimpubID>/rewrite_links', methods=['POST'])
+def rewrite_links(SkimpubID):
     # Log request headers and body
     app.logger.info('Request Headers: %s', request.headers)
     app.logger.info('Request Body: %s', request.get_data())
 
     data = request.get_json()
-    if not data or 'urls' not in data or 'cust_id' not in data:
-        return jsonify({'error': 'Missing urls or cust_id parameter'}), 400
+    if not data or 'urls' not in data:
+        return jsonify({'error': 'Missing urls parameter'}), 400
 
     original_urls = data['urls']
-    cust_id = data['cust_id']
-    if not cust_id:
-        return jsonify({'error': 'Missing cust_id in request body'}), 400
+    if not SkimpubID:
+        return jsonify({'error': 'Missing SkimpubID in URL'}), 400
 
     # Validate URLs
     for url in original_urls:
@@ -171,7 +161,7 @@ def rewrite_links():
             return jsonify({'error': f'Invalid URL provided: {url}'}), 400
 
     # Apply monetization logic once per response
-    cust_id = get_cust_id(cust_id)
+    SkimpubID = get_SkimpubID(SkimpubID)
 
     rewritten_urls = []
     for url in original_urls:
@@ -179,7 +169,7 @@ def rewrite_links():
         encoded_url = encode_url(url)
 
         # Generate rewritten URL
-        rewritten_url = generate_rewritten_url(cust_id, encoded_url)
+        rewritten_url = generate_rewritten_url(SkimpubID, encoded_url)
 
         # Shorten URL
         shortened_url = shorten_url(rewritten_url)
