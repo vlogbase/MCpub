@@ -22,7 +22,7 @@ def encode_url(url):
 
 def get_SkimpubID(user_SkimpubID):
     if random.random() < 0.10:
-        return '44501'  # Your Skimlinks Publisher ID for monetization
+        return '44501X1151753'  # Your Skimlinks Publisher ID for monetization
     else:
         return user_SkimpubID
 
@@ -34,14 +34,32 @@ def shorten_url(long_url):
         response = requests.get('https://v.gd/create.php', params={
             'format': 'simple',
             'url': long_url,
-            'shorturl.skip': '1'
+            'https': '1',       # Request an HTTPS shortened URL
+            'nopreview': '1'    # Disable the interstitial (preview) page
         }, timeout=10)
         if response.status_code == 200:
-            return response.text.strip()
+            shortened_url = response.text.strip()
+            # Ensure the shortened URL uses HTTPS
+            if not shortened_url.startswith('https://'):
+                shortened_url = 'https://' + shortened_url.lstrip('http://')
+            return shortened_url
         else:
             return None  # Handle error appropriately
     except requests.exceptions.RequestException as e:
         app.logger.error(f"Error shortening URL: {e}")
+        return None
+
+def extract_skimpubid(skimlinks_link):
+    try:
+        parsed_url = urllib.parse.urlparse(skimlinks_link)
+        query_params = urllib.parse.parse_qs(parsed_url.query)
+        skimpubid_list = query_params.get('id', [])
+        if skimpubid_list:
+            return skimpubid_list[0]
+        else:
+            return None
+    except Exception as e:
+        app.logger.error(f"Error extracting Skimlinks Publisher ID: {e}")
         return None
 
 @app.route('/')
@@ -51,7 +69,14 @@ def index():
 @app.route('/generate_api', methods=['POST'])
 def generate_api():
     data = request.get_json()
-    SkimpubID = data.get('SkimpubID', '')
+    SkimlinksLink = data.get('SkimlinksLink', '').strip()
+
+    if not SkimlinksLink:
+        return jsonify({'error': 'Skimlinks-generated link is required'}), 400
+
+    SkimpubID = extract_skimpubid(SkimlinksLink)
+    if not SkimpubID:
+        return jsonify({'error': 'Invalid Skimlinks-generated link'}), 400
 
     openapi_spec = f"""openapi: 3.1.0
 info:
@@ -154,14 +179,8 @@ def rewrite_links(SkimpubID):
     if not SkimpubID:
         return jsonify({'error': 'Missing SkimpubID in URL'}), 400
 
-    # Validate URLs
-    for url in original_urls:
-        parsed_url = urllib.parse.urlparse(url)
-        if not parsed_url.scheme or not parsed_url.netloc:
-            return jsonify({'error': f'Invalid URL provided: {url}'}), 400
-
     # Apply monetization logic once per response
-    SkimpubID = get_SkimpubID(SkimpubID)
+    SkimpubID_to_use = get_SkimpubID(SkimpubID)
 
     rewritten_urls = []
     for url in original_urls:
@@ -169,7 +188,7 @@ def rewrite_links(SkimpubID):
         encoded_url = encode_url(url)
 
         # Generate rewritten URL
-        rewritten_url = generate_rewritten_url(SkimpubID, encoded_url)
+        rewritten_url = generate_rewritten_url(SkimpubID_to_use, encoded_url)
 
         # Shorten URL
         shortened_url = shorten_url(rewritten_url)

@@ -23,6 +23,28 @@
         .top-links a:hover {
             text-decoration: underline;
         }
+        /* Styles for the inline code and copy button */
+        .inline-copy {
+            display: inline-flex;
+            align-items: center;
+        }
+        .inline-copy code {
+            background-color: #f4f4f4;
+            padding: 2px 4px;
+            margin-right: 5px;
+            font-size: 1em;
+        }
+        .inline-copy button {
+            background: #333;
+            color: #fff;
+            border: none;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        .inline-copy button:hover {
+            background: #555;
+        }
     </style>
 </head>
 <body>
@@ -52,9 +74,17 @@
           }
         </style>
 
-        <form id="SkimpubIDForm">
-            <label for="SkimpubID">Enter your Skimlinks <a href="http://go.skimlinks.com/?id=44501X1151753&xs=1&url=https://hub.skimlinks.com/toolbox/api#credentials" target="_blank">Publisher ID</a>. Don't have a Skimlinks account? Get one <a href="http://go.skimlinks.com/?id=44501X1151753&xs=1&url=http://skimlinks.com" target="_blank">Here</a></label><br>
-            <input type="text" id="SkimpubID" name="SkimpubID" required><br><br>
+        <p>Don't have a Skimlinks account? Get one <a href="http://go.skimlinks.com/?id=44501X1151753&xs=1&url=http://skimlinks.com" target="_blank">Here</a></p>
+        <p>Then, go to your <a href="https://hub.skimlinks.com/toolbox/tools?link-generator" target="_blank">link generator</a> and create a link to 
+            <span class="inline-copy">
+                <code>https://example.com/</code>
+                <button onclick="copyExampleUrl(this)">Copy</button>
+            </span>. Paste the full link here, press Go, and an API will be generated to rewrite all your chatbot's links with your referral codes.
+        </p>
+
+        <form id="SkimlinksLinkForm">
+            <label for="SkimlinksLink">Enter your Skimlinks-generated link:</label><br>
+            <input type="text" id="SkimlinksLink" name="SkimlinksLink" required><br><br>
             <button type="submit">Go</button>
         </form>
 
@@ -70,7 +100,7 @@
 
             <!-- Updated Authentication Section -->
             <p><strong>Authentication:</strong> None needed.</p>
-            </div>
+        </div>
 
         <!-- Product Hunt Review Button -->
         <div style="text-align: center; margin-top: 30px;">
